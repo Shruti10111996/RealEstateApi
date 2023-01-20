@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstateApi", "RealEstateApi\RealEstateApi.csproj", "{4AFF8E96-663A-4C02-8A6A-2DC977DF2250}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4AFF8E96-663A-4C02-8A6A-2DC977DF2250}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AFF8E96-663A-4C02-8A6A-2DC977DF2250}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AFF8E96-663A-4C02-8A6A-2DC977DF2250}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AFF8E96-663A-4C02-8A6A-2DC977DF2250}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC9C154F-0E5A-49C9-ACBA-0276827AA097}
+	EndGlobalSection
+EndGlobal
