@@ -12,6 +12,52 @@ namespace RealEstateApi.Controllers
     public class PropertiesController : ControllerBase
     {
         ApiDbContext _dbContext = new ApiDbContext();
+
+        [HttpGet]
+        [Authorize]
+
+        public IActionResult Get(string sort)
+        {
+            IQueryable<Property> properties;
+            switch(sort)
+            {
+                case "desc":
+                    properties = _dbContext.Properties.OrderByDescending(q => q.CategoryId);
+                    break;
+                case "asc":
+                    properties = _dbContext.Properties.OrderBy(q => q.CategoryId);
+                    break;
+                default:
+                    properties = _dbContext.Properties;
+                    break;
+             }
+            return Ok(properties);
+        }
+
+        [HttpGet("PropertyList")]
+        [Authorize]
+        public IActionResult GetProperties(int categoryId)
+        {
+            var propertyResult = _dbContext.Properties.Where(c => c.CategoryId == categoryId);
+            if(propertyResult == null) 
+            {
+                return NotFound();
+            }
+            return Ok(propertyResult);
+        }
+
+        [HttpGet("PropertyDetail")]
+        [Authorize]
+        public IActionResult GetPropertyDetail(int id)
+        {
+            var propertyResult = _dbContext.Properties.FirstOrDefault(p => p.Id == id);
+            if (propertyResult == null)
+            {
+                return NotFound();
+            }
+            return Ok(propertyResult);
+        }
+
         [HttpPost]
         [Authorize]
         public IActionResult Post([FromBody] Property property)
@@ -32,6 +78,65 @@ namespace RealEstateApi.Controllers
                 _dbContext.Properties.Add(property);
                 _dbContext.SaveChanges();
                 return StatusCode(StatusCodes.Status201Created);
+            }
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public IActionResult Put(int id, [FromBody] Property property)
+        {
+           var propertyResult =  _dbContext.Properties.FirstOrDefault(p => p.Id == id);
+            if (propertyResult == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                var user = _dbContext.Users.First(u => u.Email == userEmail);
+                if (user == null)
+                    return NotFound();
+
+                if (propertyResult.UserId == user.Id)
+                {
+                    propertyResult.Name = property.Name;
+                    propertyResult.Detail = property.Detail;
+                    propertyResult.Price = property.Price;
+                    propertyResult.Address = property.Address;
+
+                    property.IsTrending = false;
+                    property.UserId = user.Id;
+                    
+                    _dbContext.SaveChanges();
+                    return Ok("Record updated successfully");
+                }
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public IActionResult Delete(int id)
+        {
+            var propertyResult = _dbContext.Properties.FirstOrDefault(p => p.Id == id);
+            if (propertyResult == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                var user = _dbContext.Users.First(u => u.Email == userEmail);
+                if (user == null)
+                    return NotFound();
+
+                if (propertyResult.UserId == user.Id)
+                {
+                    _dbContext.Properties.Remove(propertyResult);
+                     _dbContext.SaveChanges();
+                    return Ok("Record deleted successfully");
+                }
+                return BadRequest();
             }
         }
     }
